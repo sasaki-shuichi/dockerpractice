@@ -1,2 +1,2 @@
 # dockerpractice
-TETST
+TEST
