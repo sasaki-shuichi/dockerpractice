@@ -69,29 +69,27 @@
 		@foreach ($model->users as $user)
 		<tr>
 			<th scope="row">{{$loop->iteration}}</th>
-			<td>{{Form::button($user['user_id'], ['class' => 'btn btn-outline-primary btn-lg', 'tabindex' => '-1', 'role' => 'button', 'onclick' => '_edit(\'' . $user['user_id'] . '\')'])}}</td>
-			<td>{{$user['name']}}</td>
-			<td>{{$user['tel']}}</td>
-			<td>{{$user['address']}}</td>
-			<td>{{$user['element']}}</td>
-			<td>{{$user['birth']}}</td>
-			{{--
 			<td>{{Form::button($user->user_id, ['class' => 'btn btn-outline-primary btn-lg', 'tabindex' => '-1', 'role' => 'button', 'onclick' => '_edit(\'' . $user->user_id . '\')'])}}</td>
 			<td>{{$user->name}}</td>
 			<td>{{$user->tel}}</td>
 			<td>{{$user->address}}</td>
 			<td>{{$user->element}}</td>
 			<td>{{$user->birth}}</td>
-			--}}
 		</tr>
 		@endforeach
 	</tbody>
 	{{Log::debug('BRADE...End');}}
 </table>
+{{$model->users->links('vendor.pagination.custom');}}
 </div>
 
 <script type="text/javascript">
 	function _search() {
+		$('form').attr('action', "{{route('disp.search')}}");
+		$('#form').submit();
+	}
+
+	function _page() {
 		$('form').attr('action', "{{route('disp.search')}}");
 		$('#form').submit();
 	}

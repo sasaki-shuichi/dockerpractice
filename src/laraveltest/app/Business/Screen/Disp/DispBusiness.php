@@ -99,7 +99,7 @@ class DispBusiness extends BaseBusiness
     /**
      * getUsers
      */
-    private function getUsers(DispViewModel $model): array
+    private function getUsers(DispViewModel $model)
     {
         $query = User::with('acounts');
         $query
@@ -107,8 +107,8 @@ class DispBusiness extends BaseBusiness
             ->prefecturesLike($model->f_prefectures)
             ->elementEquals($model->f_man, $model->f_woman)
             ->birthFromTo($model->f_birthFrom, $model->f_birthTo);
-        $rs = $query->get();
-        return !is_null($rs) ? $rs->toArray() : [];
+        $rs = $query->paginate(5);
+        return $rs;
 
         //$query = User::query()->join('acounts', 'users.user_id', '=', 'acounts.user_id');
         //$rtn = DB::select('select users.* , acounts.password from users left join acounts on acounts.user_id = users.user_id');
