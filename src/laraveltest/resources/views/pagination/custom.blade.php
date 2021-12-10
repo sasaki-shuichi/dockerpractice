@@ -9,8 +9,11 @@
             <span class="page-link" aria-hidden="true">&laquo;</span>
         </li>
         @else
+        @php
+        $buff = 'onclick="_page(\'' . ($paginator->currentPage() - 1) . '\')"';
+        @endphp
         <li class="page-item">
-            <a class="page-link text-success" href="{{ $paginator->previousPageUrl() }}" rel="prev" aria-label="@lang('pagination.previous')">&laquo;</a>
+            <a class="page-link text-success" href="javascript:void(0)" {!! $buff !!} rel="prev" aria-label="@lang('pagination.previous')">&laquo;</a>
         </li>
         @endif
 
@@ -27,7 +30,10 @@
         @if ($page == $paginator->currentPage())
         <li class="page-item active" aria-current="page"><span class="page-link bg-success border-success">{{ $page }}</span></li>
         @else
-        <li class="page-item"><a class="page-link text-success" href="{{ $url }}">{{ $page }}</a></li>
+        @php
+        $buff = 'onclick="_page(\'' . $page . '\')"';
+        @endphp
+        <li class="page-item"><a class="page-link text-success" href="javascript:void(0)" {!! $buff !!}>{{ $page }}</a></li>
         @endif
         @endforeach
         @endif
@@ -35,8 +41,11 @@
 
         {{-- Next Page Link --}}
         @if ($paginator->hasMorePages())
+        @php
+        $buff = 'onclick="_page(\'' . ($paginator->currentPage() + 1) . '\')"';
+        @endphp
         <li class="page-item">
-            <a class="page-link text-success" href="{{ $paginator->nextPageUrl() }}" rel="next" aria-label="@lang('pagination.next')">&raquo;</a>
+            <a class="page-link text-success" href="javascript:void(0)" {!! $buff !!} rel="next" aria-label="@lang('pagination.next')">&raquo;</a>
         </li>
         @else
         <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.next')">

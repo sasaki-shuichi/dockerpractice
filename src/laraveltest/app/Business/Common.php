@@ -4,6 +4,8 @@ namespace App\Business;
 
 use Illuminate\Http\Request;
 use App\Models\Sequence;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 class Common
 {
@@ -32,6 +34,36 @@ class Common
             $rtn = $default;
         }
         return $rtn;
+    }
+
+    /**
+     * getSession
+     */
+    public static function getSession(string $key)
+    {
+        $rtn = null;
+        if (Session::has('business') === true) {
+            $array = (array)Session::get('business');
+            if (array_key_exists($key, $array) === true) {
+                $rtn = $array[$key];
+            }
+            Log::debug('getSession()...' . print_r($array, true));
+        }
+        return $rtn;
+    }
+
+    /**
+     * setSession
+     */
+    public static function setSession(string $key, $val)
+    {
+        $array = [];
+        if (Session::has('business') === true) {
+            $array = (array)Session::get('business');
+        }
+        $array[$key] = $val;
+        Session::put('business', $array);
+        Log::debug('setSession()...' . print_r($array, true));
     }
 
     /**

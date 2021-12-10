@@ -16,6 +16,7 @@
 <div th:fragment="search">
 	{{Form::open(['method' => 'post', 'id' => 'form', 'class' => 'form-search'])}}
 	{{Form::hidden('userId', $model->f_userId, ['id' => 'userId'])}}
+	{{Form::hidden('page', $model->f_page, ['id' => 'page'])}}
 	<div class="form-group form-inline input-group-sm">
 		<label for="name" class="col-md-2 control-label">名前</label>
 		{{Form::text('name', $model->f_name, ['class' => 'form-control col-md-3'])}}
@@ -52,7 +53,9 @@
 
 </br></br>
 <h5>検索一覧</h5>
-
+@if(!$model->users->isEmpty())
+{{$model->users->links('pagination.custom');}}
+@endif
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -80,7 +83,9 @@
 	</tbody>
 	{{Log::debug('BRADE...End');}}
 </table>
-{{$model->users->links('vendor.pagination.custom');}}
+@if(!$model->users->isEmpty())
+{{$model->users->links('pagination.custom');}}
+@endif
 </div>
 
 <script type="text/javascript">
@@ -89,8 +94,9 @@
 		$('#form').submit();
 	}
 
-	function _page() {
-		$('form').attr('action', "{{route('disp.search')}}");
+	function _page(page) {
+		$('input:hidden[name="page"]').val(page);
+		$('form').attr('action', "{{route('disp.page')}}");
 		$('#form').submit();
 	}
 

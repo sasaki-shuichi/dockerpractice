@@ -39,6 +39,7 @@ Route::prefix('laraveltest')->group(function () {
 		Route::group(['prefix' => 'disp', 'as' => 'disp.'],  function () {
 			Route::get('/init', [DispController::class, 'init'])->name('init');
 			Route::post('/search', [DispController::class, 'search'])->name('search');
+			Route::post('/page', [DispController::class, 'page'])->name('page');
 			Route::post('/edit', [DispController::class, 'edit'])->name('edit');
 			Route::get('/complete', [DispController::class, 'complete'])->name('complete');
 		});

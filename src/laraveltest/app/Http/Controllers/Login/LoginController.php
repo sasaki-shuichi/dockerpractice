@@ -42,6 +42,7 @@ class LoginController extends Controller
     public function lift(LoginFormRequest $request)
     {
         Auth::logout();
+        $request->session()->flush();
         $request->session()->regenerate();
         return view('pages.login', ['model' => new LoginViewModel()]);
     }

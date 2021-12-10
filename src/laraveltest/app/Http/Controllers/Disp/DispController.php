@@ -6,7 +6,6 @@ use App\Business\Screen\Disp\DispBusiness;
 use App\Business\Screen\Disp\DispViewModel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DispFormRequest;
-use Illuminate\Support\Facades\Log;
 
 /**
  * DispController
@@ -37,6 +36,15 @@ class DispController extends Controller
     public function search(DispFormRequest $request)
     {
         $model = $this->business->search($request);
+        return view('pages.disp', ['model' => $model]);
+    }
+
+    /**
+     * search
+     */
+    public function page(DispFormRequest $request)
+    {
+        $model = $this->business->page($request);
         return view('pages.disp', ['model' => $model]);
     }
 

@@ -28,14 +28,15 @@ class DispBusiness extends BaseBusiness
         Log::debug('検索処理開始');
         $rtn = new DispViewModel();
         try {
-            $this->setFormValues($request, $rtn);
+            $this->setFormValues($request, false, $rtn);
             $errors = $this->validation($request);
             if (is_null($errors) === false) {
                 // Error
                 $rtn->addMessageBag($errors);
             } else {
+                Common::setSession('DISPBUSINESS_SEARCH_PARAM', $rtn->var);
+
                 $users = $this->getUsers($rtn);
-                //Log::debug('USERS:' . print_r($users, true));
                 $rtn->users = $users;
             }
         } catch (\Exception $e) {
@@ -44,6 +45,26 @@ class DispBusiness extends BaseBusiness
             $rtn->addException($e);
         }
         Log::debug('検索処理終了');
+        return $rtn;
+    }
+
+    /**
+     * page
+     */
+    public function page(DispFormRequest $request): DispViewModel
+    {
+        Log::debug('Page処理開始');
+        $rtn = new DispViewModel();
+        try {
+            $this->setFormValues($request, true, $rtn);
+            $users = $this->getUsers($rtn);
+            $rtn->users = $users;
+        } catch (\Exception $e) {
+            // Error
+            Log::error($e);
+            $rtn->addException($e);
+        }
+        Log::debug('Page処理終了');
         return $rtn;
     }
 
@@ -68,7 +89,7 @@ class DispBusiness extends BaseBusiness
     /**
      * setFormValues
      */
-    private function setFormValues(DispFormRequest $request, DispViewModel $model)
+    private function setFormValues(DispFormRequest $request, bool $isPagenate, DispViewModel $model)
     {
         $model->f_name        = Common::getRequestString($request, 'name');
         $model->f_man         = Common::getRequestString($request, 'man');
@@ -76,6 +97,14 @@ class DispBusiness extends BaseBusiness
         $model->f_prefectures = Common::getRequestArray($request, 'prefectures');
         $model->f_birthFrom   = Common::getRequestString($request, 'birthFrom');
         $model->f_birthTo     = Common::getRequestString($request, 'birthTo');
+
+        if ($isPagenate === true) {
+            $var = Common::getSession('DISPBUSINESS_SEARCH_PARAM');
+            if (is_null($var) === false) {
+                $model->var = $var;
+            }
+            $model->f_page = Common::getRequestString($request, 'page');
+        }
     }
 
     /**
@@ -101,13 +130,14 @@ class DispBusiness extends BaseBusiness
      */
     private function getUsers(DispViewModel $model)
     {
+        $page = Utils::toInt($model->f_page, 1);
         $query = User::with('acounts');
         $query
             ->nameLike($model->f_name)
             ->prefecturesLike($model->f_prefectures)
             ->elementEquals($model->f_man, $model->f_woman)
             ->birthFromTo($model->f_birthFrom, $model->f_birthTo);
-        $rs = $query->paginate(5);
+        $rs = $query->paginate(10, '*', null, $page);
         return $rs;
 
         //$query = User::query()->join('acounts', 'users.user_id', '=', 'acounts.user_id');

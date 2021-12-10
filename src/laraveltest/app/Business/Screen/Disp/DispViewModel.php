@@ -22,10 +22,11 @@ class DispViewModel extends BaseViewModel
             'f_birthFrom'   => '',
             'f_birthTo'     => '',
             'f_userId'      => '',
+            'f_page'        => '1',
             'man'           => '1',
             'woman'         => '1',
             'prefectures'   => config('values.prefectures'),
-            'users'         => []
+            'users'         => collect([])
         ];
     }
 }
